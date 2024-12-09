@@ -28,3 +28,10 @@ az ad sp create-for-rbac --name "Github-Actions-SP" `
 #### Configure a federated identity credential on an app
 
 https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust?pivots=identity-wif-apps-methods-azp
+
+```bash
+$webappName="[Web App here]"
+$rgName="[rg Name]"
+az webapp deployment list-publishing-profiles --name $webappName `
+                    --resource-group urlshortener-dev --xml
+```
