@@ -14,7 +14,6 @@ az login
 ### Create Resource Group
 
 ```bash
-loca
 az group create --name urlshortener --location eastus2
 ```
 
@@ -24,6 +23,15 @@ az ad sp create-for-rbac --name "Github-Actions-SP" `
                          --scopes /subscriptions/21bbbb3d-189b-48e1-b499-6c74b9f9a598 `
                          --sdk-auth
 ```
+### Apply Custom Contributor Role
+
+```bash
+az ad sp create-for-rbac --name "Github-Actions-SP" `
+                         --role infra_deploy `
+                         --scopes /subscriptions/21bbbb3d-189b-48e1-b499-6c74b9f9a598 `
+                         --sdk-auth
+```
+
 
 #### Configure a federated identity credential on an app
 
