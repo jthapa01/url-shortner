@@ -11,7 +11,7 @@ namespace UrlShortener.Api.Core.Test
         [InlineData(1000, "G8")]
         [InlineData(61, "z")]
         [InlineData(987654321, "14q60P")]
-        public void Test1(int number, string expected)
+        public void Should_encode_number_to_base62(long number, string expected)
         {
             number.EncodeToBase62()
                 .Should()

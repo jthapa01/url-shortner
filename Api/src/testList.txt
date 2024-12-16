@@ -1,0 +1,6 @@
+TEST LIST
+
+Check if the end of range is greater than start
+Unique tokens
+Accept multiple ranges
+_tokenRange on TokenProvider can be null
