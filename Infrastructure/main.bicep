@@ -28,9 +28,6 @@ module apiService 'modules/compute/appservice.bicep' = {
       }
     ]
   }
-  dependsOn: [
-    keyVault
-  ]
 }
 
 module cosmosDb 'modules/storage/cosmos-db.bicep' = {
@@ -43,9 +40,6 @@ module cosmosDb 'modules/storage/cosmos-db.bicep' = {
     locationName: 'eastus2'
     keyVaultName: keyVault.outputs.name
   }
-  dependsOn: [
-    keyVault
-  ]
 }
 
 module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' = {
@@ -58,7 +52,6 @@ module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' 
     ]
   }
   dependsOn: [
-    keyVault
     apiService
   ]
 }
