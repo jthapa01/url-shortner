@@ -17,6 +17,7 @@ az login
 az group create --name urlshortener --location eastus2
 ```
 
+### Create Service Principal
 ```bash
 az ad sp create-for-rbac --name "Github-Actions-SP" `
                          --role contributor `
@@ -32,6 +33,10 @@ az ad sp create-for-rbac --name "Github-Actions-SP" `
                          --sdk-auth
 ```
 
+### Run what-if
+```bash
+az deployment group what-if --resource-group urlshortener-dev --template-file infrastructure/main.bicep
+``` 
 
 #### Configure a federated identity credential on an app
 
