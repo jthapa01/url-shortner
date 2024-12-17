@@ -1,16 +1,16 @@
-param vaultName string
 param location string = resourceGroup().location
+param vaultName string
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaultName
   location: location
   properties: {
     sku: {
-      family: 'A'
       name: 'standard'
+      family: 'A'
     }
-    tenantId: subscription().tenantId
     enableRbacAuthorization: true
+    tenantId: subscription().tenantId
   }
 }
 
