@@ -28,9 +28,6 @@ module apiService 'modules/compute/appservice.bicep' = {
       }
     ]
   }
-  dependsOn: [
-    keyVault
-  ]
 }
 
 module cosmosDb 'modules/storage/cosmos-db.bicep' = {
