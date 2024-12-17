@@ -56,7 +56,6 @@ module keyVaultRoleAssignment 'modules/secrets/keyVault-role-assignment.bicep' =
     ]
   }
   dependsOn: [
-    keyVault
     apiService
   ]
 }
