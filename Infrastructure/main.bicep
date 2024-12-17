@@ -2,7 +2,7 @@ param location string = resourceGroup().location
 
 var uniqueId = uniqueString(resourceGroup().id)
 
-module keyVault 'modules/secrets/keyvault.bicep' = {
+module keyVault 'modules/secrets/key-vault.bicep' = {
   name: 'keyVaultDeployment'
   params: {
     vaultName: 'kv-${uniqueId}'
@@ -51,7 +51,4 @@ module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' 
       // Add more principal IDs as needed
     ]
   }
-  dependsOn: [
-    apiService
-  ]
 }
