@@ -40,6 +40,17 @@ module tokenRangeService 'modules/compute/appservice.bicep' = {
   }
 }
 
+module postgres 'modules/storage/postgresql.bicep' = {
+  name: 'postgresDeployment'
+  params: {
+    name: 'postgresql-${uniqueString(resourceGroup().id)}'
+    location: location
+    administratorLogin: 'adminuser'
+    administratorLoginPassword: 'adminuser'
+    keyVaultName: keyVault.outputs.name
+  }
+}
+
 module cosmosDb 'modules/storage/cosmos-db.bicep' = {
   name: 'cosmosDbDeployment'
   params: {
