@@ -1,6 +1,9 @@
 TEST LIST
 
 Unique tokens
+    - Generating/assigning ranges
+    - Ensure token is incremented
+    - Ensure no duplication
 Accept multiple ranges
 _tokenRange on TokenProvider can be null
 

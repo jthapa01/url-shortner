@@ -2,6 +2,7 @@ param appServicePlanName string
 param appName string
 param location string = resourceGroup().location
 param keyVaultName string
+param appSettings array = []
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: appServicePlanName
@@ -26,12 +27,15 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|8.0'
-      appSettings: [
-        {
-          name: 'keyVaultName' 
-          value: keyVaultName
-        }
-      ]
+      appSettings: concat(
+        [
+          {
+            name: 'keyVaultName' 
+            value: keyVaultName
+          }
+        ],
+        appSettings
+      )
     }
   }
 }

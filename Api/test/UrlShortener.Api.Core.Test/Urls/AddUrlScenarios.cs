@@ -44,7 +44,18 @@ public class AddUrlScenarios
     [Fact]
     public async Task Should_return_error_when_created_by_is_missing()
     {
-        var request = new AddUrlRequest(new Uri("https://dongtrain.com"), string.Empty);
+        var request = GenerateAddUrlRequest(createdBy: string.Empty);
+        var response = await _handler.HandleAsync(request, default);
+
+        response.Succeeded.Should().BeFalse();
+        response.Error.Code.Should().Be("missing_value");
+    }
+    
+    [Fact]
+    public async Task Should_return_error_if_long_url_is_not_http()
+    {
+        var request = GenerateAddUrlRequest(createdBy: string.Empty);
+        
         var response = await _handler.HandleAsync(request, default);
 
         response.Succeeded.Should().BeFalse();
@@ -62,9 +73,9 @@ public class AddUrlScenarios
         _urlDataStore[response.Value!.ShortUrl].CreatedOn.Should().Be(_timeProvider.GetUtcNow());
     }
     
-    private static AddUrlRequest GenerateAddUrlRequest()
+    private static AddUrlRequest GenerateAddUrlRequest(string createdBy="test@gmail.com")
     {
-        var request = new AddUrlRequest(new Uri("https://dongtrain.com"), "test@hotmail.com");
+        var request = new AddUrlRequest(new Uri("https://dongtrain.com"), createdBy);
         return request;
     }
 }

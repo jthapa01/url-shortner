@@ -11,7 +11,7 @@ public record TokenRange
         End = end;
     }
 
-    public long End { get; set; }
+    public long End { get; }
 
-    public long Start { get; set; }
+    public long Start { get; }
 }
