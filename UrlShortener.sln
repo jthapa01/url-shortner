@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1092B514
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.TokenRangeService", "TokenRanges\src\UrlShortener.TokenRangeService\UrlShortener.TokenRangeService.csproj", "{30D1B85C-F57E-4F39-921D-47C4A114315B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.TokenRangeService.Tests", "TokenRanges\tests\UrlShortener.TokenRangeService.Tests\UrlShortener.TokenRangeService.Tests.csproj", "{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{30D1B85C-F57E-4F39-921D-47C4A114315B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30D1B85C-F57E-4F39-921D-47C4A114315B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30D1B85C-F57E-4F39-921D-47C4A114315B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BAE130E8-97AE-420A-B0A6-BC6BA252733A} = {E70F33AA-DCD0-45CD-8B0A-F595537660F9}
@@ -72,5 +78,6 @@ Global
 		{3949F35D-F586-4D56-81E2-CA7CB1AD0F90} = {8D6AA3BC-791F-4828-90C0-925DB5CAE360}
 		{1092B514-3BEE-41AE-81EE-0FBED7225E84} = {8D6AA3BC-791F-4828-90C0-925DB5CAE360}
 		{30D1B85C-F57E-4F39-921D-47C4A114315B} = {3949F35D-F586-4D56-81E2-CA7CB1AD0F90}
+		{0BFFB6A6-7F22-44CE-9AF0-5E096F47BC2C} = {1092B514-3BEE-41AE-81EE-0FBED7225E84}
 	EndGlobalSection
 EndGlobal
