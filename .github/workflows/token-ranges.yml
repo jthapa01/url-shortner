@@ -38,6 +38,11 @@ jobs:
       with:
         name: .net-app
         path: ${{env.DOTNET_ROOT}}/myapp
+    - name: Upload Sql artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pg-script
+        path: TokenRanges/tests/UrlShortener.TokenRangeService.Tests/Table.sql
 
   deploy-dev:
     runs-on: ubuntu-latest
@@ -49,6 +54,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          
+      - name: Download db artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pg-script
       
       - name: Install PostgreSQL client
         run: |
@@ -80,6 +90,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          
+      - name: Download db artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pg-script
           
       - name: Install PostgreSQL client
         run: |
@@ -113,6 +128,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          
+      - name: Download db artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pg-script
           
       - name: Install PostgreSQL client
         run: |
