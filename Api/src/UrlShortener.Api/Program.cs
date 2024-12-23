@@ -1,3 +1,4 @@
+using Api;
 using Api.Extensions;
 using Azure.Identity;
 using UrlShortener.Core.Urls.Add;
@@ -17,9 +18,19 @@ if (!string.IsNullOrEmpty(keyVaultName))
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton(TimeProvider.System)
+    .AddSingleton<IEnvironmentManager, EnvironmentManager>();
 builder.Services.AddUrlFeature()
     .AddCosmosUrlDataStore(builder.Configuration);
+
+builder.Services.AddHttpClient("TokenRangeService",
+    client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["TokenRangeService:Endpoint"]!);  // TODO: Add to bicep
+    });
+
+builder.Services.AddSingleton<ITokenRangeApiClient, TokenRangeApiClient>();
+builder.Services.AddHostedService<TokenManager>();
 
 var app = builder.Build();
 
