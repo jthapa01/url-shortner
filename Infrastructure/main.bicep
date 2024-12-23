@@ -80,3 +80,10 @@ module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' 
     ]
   }
 }
+
+module entraApp 'modules/identity/entra-app.bicep' = {
+  name: 'entraAppWebDeployment'
+  params: {
+    applicationName: 'web-${uniqueId}'
+  }
+}
