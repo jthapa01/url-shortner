@@ -58,7 +58,7 @@ public class TestAuthHandler(
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, "TestUser"),
-            new Claim(ClaimTypes.NameIdentifier, "testuser@gmail.com")
+            new Claim("preferred_username", "testuser@gmail.com")
         };
 
         var identity = new ClaimsIdentity(claims, "Test");
