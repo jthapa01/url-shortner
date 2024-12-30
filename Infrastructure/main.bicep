@@ -51,6 +51,9 @@ module apiService 'modules/compute/appservice.bicep' = {
       }
     ]
   }
+  dependsOn: [
+    keyVault
+  ]
 }
 
 module tokenRangeService 'modules/compute/appservice.bicep' = {
@@ -61,6 +64,9 @@ module tokenRangeService 'modules/compute/appservice.bicep' = {
       location: location
       keyVaultName: keyVaultName
   }
+  dependsOn: [
+    keyVault
+  ]
 }
 
 module redirectApiService 'modules/compute/appservice.bicep' = {
@@ -81,6 +87,9 @@ module redirectApiService 'modules/compute/appservice.bicep' = {
       }
     ]
   }
+  dependsOn: [
+    keyVault
+  ]
 }
 
 module postgres 'modules/storage/postgresql.bicep' = {
@@ -104,6 +113,9 @@ module cosmosDb 'modules/storage/cosmos-db.bicep' = {
     locationName: 'eastus2'
     keyVaultName: keyVaultName
   }
+  dependsOn: [
+    keyVault
+  ]
 }
 
 module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' = {
@@ -114,9 +126,14 @@ module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' 
       apiService.outputs.principalId
       tokenRangeService.outputs.principalId
       redirectApiService.outputs.principalId
-      // Add more principal IDs as needed
     ]
   }
+  dependsOn: [
+    keyVault
+    apiService
+    tokenRangeService
+    redirectApiService
+  ]
 }
 
 module entraApp 'modules/identity/entra-app.bicep' = {
@@ -124,4 +141,16 @@ module entraApp 'modules/identity/entra-app.bicep' = {
   params: {
     applicationName: 'web-${uniqueId}'
   }
+}
+
+module redisCache 'modules/storage/redis-cache.bicep' = {
+  name: 'redisCacheDeployment'
+  params: {
+    name: 'redis-cache-${uniqueId}'
+    location: location
+    keyVaultName: keyVaultName
+  }
+  dependsOn: [
+    keyVault
+  ]
 }
