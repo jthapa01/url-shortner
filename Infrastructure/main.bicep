@@ -3,11 +3,12 @@ param location string = resourceGroup().location
 param pgSqlPassword string
 
 var uniqueId = uniqueString(resourceGroup().id)
+var keyVaultName = 'kv-${uniqueId}'
 
 module keyVault 'modules/secrets/key-vault.bicep' = {
   name: 'keyVaultDeployment'
   params: {
-    vaultName: 'kv-${uniqueId}'
+    vaultName: keyVaultName
     location: location
   }
 }
@@ -18,7 +19,7 @@ module apiService 'modules/compute/appservice.bicep' = {
     appName: 'api-${uniqueId}'
     appServicePlanName: 'plan-api-${uniqueId}'
     location: location
-    keyVaultName: keyVault.outputs.name
+    keyVaultName: keyVaultName
     appSettings: [
       {
         name: 'DatabaseName'
@@ -58,7 +59,27 @@ module tokenRangeService 'modules/compute/appservice.bicep' = {
       appName: 'token-range-service-${uniqueId}'
       appServicePlanName: 'plan-token-range-${uniqueId}'
       location: location
-      keyVaultName: keyVault.outputs.name
+      keyVaultName: keyVaultName
+  }
+}
+
+module redirectApiService 'modules/compute/appservice.bicep' = {
+  name: 'redirectApiServiceDeployment'
+  params: {
+    appName: 'redirect-api-${uniqueId}'
+    appServicePlanName: 'plan-redirect-${uniqueId}'
+    location: location
+    keyVaultName: keyVaultName
+    appSettings: [
+      {
+        name: 'DatabaseName'
+        value: 'urls'
+      }
+      {
+        name: 'ContainerName'
+        value: 'items'
+      }
+    ]
   }
 }
 
@@ -69,7 +90,7 @@ module postgres 'modules/storage/postgresql.bicep' = {
     location: location
     administratorLogin: 'adminuser'
     administratorLoginPassword: pgSqlPassword
-    keyVaultName: keyVault.outputs.name
+    keyVaultName: keyVaultName
   }
 }
 
@@ -81,17 +102,18 @@ module cosmosDb 'modules/storage/cosmos-db.bicep' = {
     kind: 'GlobalDocumentDB'
     databaseName: 'urls'
     locationName: 'eastus2'
-    keyVaultName: keyVault.outputs.name
+    keyVaultName: keyVaultName
   }
 }
 
 module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' = {
   name: 'keyVaultRoleAssignmentDeployment'
   params: {
-    keyVaultName: keyVault.outputs.name
+    keyVaultName: keyVaultName
     principalIds: [
       apiService.outputs.principalId
       tokenRangeService.outputs.principalId
+      redirectApiService.outputs.principalId
       // Add more principal IDs as needed
     ]
   }
