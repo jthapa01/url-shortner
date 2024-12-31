@@ -35,7 +35,8 @@ az ad sp create-for-rbac --name "Github-Actions-SP" `
 
 ### Run what-if
 ```bash
-az deployment group what-if --resource-group urlshortener-dev --template-file infrastructure/main.bicep
+$rgName="[rg Name]"
+az deployment group what-if --resource-group $rgName --template-file infrastructure/main.bicep
 ``` 
 
 #### Configure a federated identity credential on an app
@@ -46,5 +47,11 @@ https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation
 $webappName="[Web App here]"
 $rgName="[rg Name]"
 az webapp deployment list-publishing-profiles --name $webappName `
-                    --resource-group urlshortener-dev --xml
+                    --resource-group $rgName --xml
 ```
+
+### Run Deployment 
+```bash
+$rgName="[rg Name]"
+az deployment group create --resource-group $rgName --template-file ./Infrastructure/main.bicep
+``` 
