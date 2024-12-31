@@ -5,8 +5,10 @@ using Api.Extensions;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 using UrlShortener.Core.Urls.Add;
+using UrlShortener.Core.Urls.List;
 using UrlShortener.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,13 +32,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(TimeProvider.System)
     .AddSingleton<IEnvironmentManager, EnvironmentManager>();
-builder.Services.AddUrlFeature()
+builder.Services
+    .AddUrlFeature()
+    .AddListUrlsFeature()
     .AddCosmosUrlDataStore(builder.Configuration);
 
 builder.Services.AddHttpClient("TokenRangeService",
     client =>
     {
-        client.BaseAddress = new Uri(builder.Configuration["TokenRangeService:Endpoint"]!);  // TODO: Add to bicep
+        client.BaseAddress = new Uri(builder.Configuration["TokenRangeService:Endpoint"]!);
     });
 
 builder.Services.AddSingleton<ITokenRangeApiClient, TokenRangeApiClient>();
@@ -109,5 +113,18 @@ app.MapPost("/api/urls",
         return Results.Created($"/api/urls/{result.Value!.ShortUrl}",
             result.Value);
     });
+
+app.MapGet("/api/urls", async (
+        HttpContext context,
+        ListUrlsHandler handler,
+        int? pageSize,
+        [FromQuery(Name = "continuation")] string? continuationToken,
+        CancellationToken cancellationToken) =>
+    {
+        var request = new ListUrlsRequest(context.User.GetUserEmail(), pageSize, continuationToken);
+        var urls = await handler.HandleAsync(request, cancellationToken);
+        return urls;
+    }
+);
 
 app.Run();

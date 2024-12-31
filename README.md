@@ -6,6 +6,14 @@ Url shortner service
 ### Download Azure CLI
 https://learn.microsoft.com/en-us/cli/azure/
 
+### Dotnet User Secrets
+#### Cd to Root of the project
+
+```bash
+dotnet user-secrets init
+dotnet user-secrets set "AzureAdB2C:Instance" "https://login.microsoftonline.com/tfp/{0}/{1}/v2.0"
+```
+
 ### Login to Azure
 ```bash
 az login
