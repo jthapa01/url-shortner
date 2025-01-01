@@ -51,10 +51,19 @@ az deployment group what-if --resource-group $rgName --template-file infrastruct
 
 https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust?pivots=identity-wif-apps-methods-azp
 
+### Get Publishing Profile
 ```bash
 $webappName="[Web App here]"
 $rgName="[rg Name]"
 az webapp deployment list-publishing-profiles --name $webappName `
+                    --resource-group $rgName --xml
+```
+
+### Get Static Web Apps Deployment Token
+```bash
+$webappName="[Web App here]"
+$rgName="[rg Name]"
+az staticwebapp secrets list --name $webappName --query "properties.apiKey"
                     --resource-group $rgName --xml
 ```
 
@@ -63,3 +72,6 @@ az webapp deployment list-publishing-profiles --name $webappName `
 $rgName="[rg Name]"
 az deployment group create --resource-group $rgName --template-file ./Infrastructure/main.bicep
 ``` 
+
+### Utilities
+- Base62 converter url: https://math.tools/calculator/base/10-62
