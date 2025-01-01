@@ -1,7 +1,7 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 
-namespace Api.Extensions;
+namespace UrlShortener.Api.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {

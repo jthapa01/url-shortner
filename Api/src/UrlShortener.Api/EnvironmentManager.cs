@@ -1,4 +1,4 @@
-namespace Api;
+namespace UrlShortener.Api;
 
 public class EnvironmentManager : IEnvironmentManager
 {

@@ -3,7 +3,7 @@ using Polly.Extensions.Http;
 using Polly.Retry;
 using UrlShortener.Core;
 
-namespace Api;
+namespace UrlShortener.Api;
 
 public class TokenRangeApiClient(IHttpClientFactory httpClientFactory) : ITokenRangeApiClient
 {

@@ -1,12 +1,12 @@
 using System.Security.Authentication;
 using System.Security.Claims;
-using Api;
-using Api.Extensions;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
+using UrlShortener.Api;
+using UrlShortener.Api.Extensions;
 using UrlShortener.Core.Urls.Add;
 using UrlShortener.Core.Urls.List;
 using UrlShortener.Infrastructure.Extensions;

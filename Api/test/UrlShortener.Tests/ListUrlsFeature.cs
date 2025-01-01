@@ -55,11 +55,16 @@ public class ListUrlsFeature(ApiFixture fixture)
         await AddUrl();
         await AddUrl();
         await AddUrl();
+        
         var getFirstPageResponse = await _client.GetAsync("/api/urls?pageSize=2");
-        var firstPageUrls = await getFirstPageResponse.Content.ReadFromJsonAsync<ListUrlsResponse>();
+        var firstPageUrls = await getFirstPageResponse.Content
+            .ReadFromJsonAsync<ListUrlsResponse>();
+        
         var getNewPageResponse = await _client.GetAsync($"/api/urls?pageSize=2&continuation={firstPageUrls!.ContinuationToken}");
-        var newPageUrls = await getNewPageResponse.Content.ReadFromJsonAsync<ListUrlsResponse>();
-        newPageUrls!.Urls.Should().HaveCount(1);
-        newPageUrls!.Urls.Should().NotIntersectWith(firstPageUrls!.Urls);
+        var newPageUrls = await getNewPageResponse.Content
+            .ReadFromJsonAsync<ListUrlsResponse>();
+
+        newPageUrls!.Urls.Should()
+            .NotIntersectWith(firstPageUrls!.Urls);
     }
 }

@@ -1,10 +1,10 @@
-using Api;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using UrlShortener.Api;
 using UrlShortener.Core.Urls.Add;
 using UrlShortener.Core.Urls.List;
 using UrlShortener.Libraries.Testing.Extensions;
@@ -36,7 +36,7 @@ public class ApiFixture : WebApplicationFactory<IApiAssemblyMarker>
                 services.AddAuthentication(defaultScheme: "TestScheme")
                     .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
                         "TestScheme", options => { });
-
+                
                 services.AddAuthorization(options =>
                 {
                     options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -44,6 +44,7 @@ public class ApiFixture : WebApplicationFactory<IApiAssemblyMarker>
                         .Build();
                     options.FallbackPolicy = null;
                 });
+
             }
         );
         

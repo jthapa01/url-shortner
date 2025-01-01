@@ -18,7 +18,7 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
         CancellationToken cancellationToken)
     {
         var data = Values
-            .Where(x => x.CreatedBy == createdBy)
+            .Where(u => u.CreatedBy == createdBy)
             .Select((u, index) => (index, new UrlItem(u.ShortUrl, u.LongUrl.ToString(), u.CreatedOn)))
             .Where(entry => continuationToken == null || entry.index > int.Parse(continuationToken))
             .Take(pageSize)
@@ -26,6 +26,8 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
 
         var urls = data.Select(entry => entry.Item2);
         var lastItemIndex = data.Last().index;
-        return Task.FromResult(new ListUrlsResponse(urls, lastItemIndex.ToString()));
+
+        return Task.FromResult(new ListUrlsResponse(urls,
+            lastItemIndex.ToString()));
     }
 }
