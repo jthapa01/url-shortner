@@ -188,6 +188,10 @@ module entraApp 'modules/identity/entra-app.bicep' = {
   name: 'entraAppWebDeployment'
   params: {
     applicationName: 'web-${uniqueId}'
+    spaRedirectUris: [
+      'http://localhost:3000/'
+      staticWebApp.outputs.url
+    ]
   }
 }
 
@@ -201,4 +205,12 @@ module redisCache 'modules/storage/redis-cache.bicep' = {
   dependsOn: [
     keyVault
   ]
+}
+
+module staticWebApp 'modules/web/static-web-app.bicep' = {
+  name: 'staticWebAppDeployment'
+  params: {
+    name: 'web-app-${uniqueId}'
+    location: location
+  }
 }
