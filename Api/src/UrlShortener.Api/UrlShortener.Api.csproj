@@ -4,7 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Api</RootNamespace>
     <UserSecretsId>9f613168-29fd-4de1-a6e3-5a17981a215e</UserSecretsId>
   </PropertyGroup>
 

@@ -1,6 +1,6 @@
-using Api;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using UrlShortener.Api;
 using UrlShortener.Core;
 
 namespace UrlShortener.Tests;
