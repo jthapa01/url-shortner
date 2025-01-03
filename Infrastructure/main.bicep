@@ -63,7 +63,7 @@ module apiService 'modules/compute/appservice.bicep' = {
       }
       {
         name: 'RedirectService__Endpoint'
-        value: '${redirectApiService.outputs.url}/r'
+        value: '${redirectApiService.outputs.url}/r/'
       }
     ]
   }
