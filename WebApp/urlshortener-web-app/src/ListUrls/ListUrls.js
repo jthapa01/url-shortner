@@ -7,15 +7,18 @@ function ListUrls({ urls, continuationToken, onLoadMore }) {
       {urls &&
         urls.map((url) => (
           <div key={url.shortUrl} className="url-item">
-            {url.shortUrl} → {url.longUrl}
+            <a href={url.shortUrl} className="short-url">
+              {url.id}
+            </a>
+            {" → "}
+            <a href={url.longUrl} className="long-url">
+              {url.longUrl}
+            </a>
           </div>
         ))}
-        {continuationToken && (
-          <button onClick={onLoadMore}>Load More</button>
-        )}
+      {continuationToken && <button onClick={onLoadMore}>Load More</button>}
     </div>
   );
 }
-
 
 export default ListUrls;

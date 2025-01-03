@@ -1,5 +1,5 @@
 import "./Home.css";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMsal } from "@azure/msal-react";
 import LogoutButton from "../LogoutButton/LogoutButton";
 import ListUrls from "../ListUrls/ListUrls";
@@ -33,11 +33,9 @@ function Home() {
   const fetchUrls = async () => {
     const token = await getToken();
     const response = await axios.get(`${apiEndpoint}/api/urls`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       params: {
-        continuationToken: data.continuationToken,
+        continuation: data.continuationToken,
         pageSize: 5,
       },
     });
@@ -62,14 +60,12 @@ function Home() {
   };
 
   useEffect(() => {
-    if (!data.initialized) {
-      fetchUrls();
-    }
+    if (!data.initialized) fetchUrls();
   });
 
   return (
     <div className="container">
-      <h1>Url Shortener</h1>
+      <h1>URL Shortener</h1>
       <div className="header">
         <LogoutButton onLogout={handleLogout} />
       </div>
