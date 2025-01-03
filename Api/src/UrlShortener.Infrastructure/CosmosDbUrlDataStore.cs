@@ -32,6 +32,6 @@ public class CosmosDbUrlDataStore(Container container) : IUrlDataStore
             new(new Uri(url.LongUrl), url.ShortUrl, url.CreatedBy, url.CreatedOn);
 
         public static explicit operator ShortenedUrlCosmos(ShortenedUrl url) =>
-            new(url.LongUrl.ToString(), url.ShortUrl, url.CreatedBy, url.CreatedOn);
+            new(url.LongUrl.ToString(), url.ShortUrlId, url.CreatedBy, url.CreatedOn);
     }
 }

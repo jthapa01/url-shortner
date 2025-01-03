@@ -8,18 +8,18 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
 {
     public Task AddAsync(ShortenedUrl shortened, CancellationToken cancellationToken)
     {
-        Add(shortened.ShortUrl, shortened);
+        Add(shortened.ShortUrlId, shortened);
         return Task.CompletedTask;
     }
 
-    public Task<ListUrlsResponse> GetAsync(string createdBy, 
-        int pageSize, 
-        string? continuationToken, 
+    public Task<UserUrls> GetAsync(string createdBy,
+        int pageSize,
+        string? continuationToken,
         CancellationToken cancellationToken)
     {
         var data = Values
             .Where(u => u.CreatedBy == createdBy)
-            .Select((u, index) => (index, new UrlItem(u.ShortUrl, u.LongUrl.ToString(), u.CreatedOn)))
+            .Select((u, index) => (index, new UserUrlItem(u.ShortUrlId, u.LongUrl.ToString(), u.CreatedOn)))
             .Where(entry => continuationToken == null || entry.index > int.Parse(continuationToken))
             .Take(pageSize)
             .ToList();
@@ -27,7 +27,7 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
         var urls = data.Select(entry => entry.Item2);
         var lastItemIndex = data.Last().index;
 
-        return Task.FromResult(new ListUrlsResponse(urls,
+        return Task.FromResult(new UserUrls(urls,
             lastItemIndex.ToString()));
     }
 }

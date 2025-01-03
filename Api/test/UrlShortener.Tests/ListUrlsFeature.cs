@@ -10,7 +10,7 @@ public class ListUrlsFeature(ApiFixture fixture)
 {
     private const string UrlsEndpoint = "/api/urls";
     private readonly HttpClient _client = fixture.CreateClient();
-    
+
     [Fact]
     public async Task Should_return_200_ok_when_requesting_urls()
     {
@@ -20,7 +20,7 @@ public class ListUrlsFeature(ApiFixture fixture)
         var urls = await response.Content.ReadFromJsonAsync<ListUrlsResponse>();
         urls!.Urls.Should().NotBeEmpty();
     }
-    
+
     private async Task<AddUrlResponse?> AddUrl(string? url = null)
     {
         url ??= $"https://{Guid.NewGuid()}.tests";
@@ -37,7 +37,7 @@ public class ListUrlsFeature(ApiFixture fixture)
         var urls = await getResponse.Content.ReadFromJsonAsync<ListUrlsResponse>();
         urls!.Urls.Should().Contain(url => url.ShortUrl == urlCreated!.ShortUrl);
     }
-    
+
     [Fact]
     public async Task Should_return_only_the_number_of_urls_requested()
     {
@@ -55,11 +55,11 @@ public class ListUrlsFeature(ApiFixture fixture)
         await AddUrl();
         await AddUrl();
         await AddUrl();
-        
+
         var getFirstPageResponse = await _client.GetAsync("/api/urls?pageSize=2");
         var firstPageUrls = await getFirstPageResponse.Content
             .ReadFromJsonAsync<ListUrlsResponse>();
-        
+
         var getNewPageResponse = await _client.GetAsync($"/api/urls?pageSize=2&continuation={firstPageUrls!.ContinuationToken}");
         var newPageUrls = await getNewPageResponse.Content
             .ReadFromJsonAsync<ListUrlsResponse>();
