@@ -1,4 +1,9 @@
 using Azure.Identity;
+using HealthChecks.CosmosDb;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using StackExchange.Redis;
 using UrlShortener.RedirectApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +16,15 @@ if (!string.IsNullOrEmpty(keyVaultName))
         new DefaultAzureCredential());
 }
 
+builder.Services.AddHealthChecks()
+    .AddAzureCosmosDB(optionsFactory: _ => new AzureCosmosDbHealthCheckOptions()
+    {
+        DatabaseId = builder.Configuration["DatabaseName"]!,
+    })
+    .AddRedis(provider => 
+        provider.GetRequiredService<IConnectionMultiplexer>(),
+        failureStatus: HealthStatus.Degraded);
+
 builder.Services.AddUrlReader(
     cosmosConnectionString: builder.Configuration["CosmosDb:ConnectionString"]!,
     databaseName: builder.Configuration["DatabaseName"]!,
@@ -19,6 +33,11 @@ builder.Services.AddUrlReader(
 
 
 var app = builder.Build();
+
+app.MapHealthChecks("/healthz", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.MapGet("/", () => "Redirect API");
 
