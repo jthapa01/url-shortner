@@ -1,3 +1,4 @@
+using HealthChecks.CosmosDb;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,5 +38,13 @@ public static class ServiceCollectionExtensions
         });
         
         return services;
+    }
+    
+    public static IHealthChecksBuilder AddCosmosHealthCheck(this IHealthChecksBuilder builder, IConfiguration configuration)
+    {
+        return builder.AddAzureCosmosDB(optionsFactory: _ => new AzureCosmosDbHealthCheckOptions()
+        {
+            DatabaseId = configuration["DatabaseName"]!,
+        });
     }
 }

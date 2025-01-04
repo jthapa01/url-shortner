@@ -1,5 +1,3 @@
-using System.Security.Authentication;
-using System.Security.Claims;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +24,13 @@ if (!string.IsNullOrEmpty(keyVaultName))
         new Uri($"https://{keyVaultName}.vault.azure.net/"),
         new DefaultAzureCredential());
 }
+
+builder.Services.AddHealthChecks()
+    .AddCosmosHealthCheck(builder.Configuration)
+    .AddUrlGroup(new Uri(
+        new Uri(builder.Configuration["TokenRangeService:Endpoint"]!),
+        "healthz"),
+        name: "token-range-service");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -103,6 +108,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("/healthz")
+    .AllowAnonymous();
+
 app.UseCors("AllowWebApp");
 app.UseAuthentication();
 app.UseAuthorization();

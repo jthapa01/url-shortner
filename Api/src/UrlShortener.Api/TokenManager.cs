@@ -3,21 +3,20 @@ using UrlShortener.Core;
 namespace UrlShortener.Api;
 
 public class TokenManager(
-    ITokenRangeApiClient client, 
+    ITokenRangeApiClient client,
     ILogger<TokenManager> logger,
     TokenProvider tokenProvider,
-    IEnvironmentManager environmentManager) : IHostedService
+    IEnvironmentManager environmentManager)
+    : IHostedService
 {
-    private readonly string _machineIdentifier = 
-            Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") ?? "unknown";
+    private readonly string _machineIdentifier = Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") ?? "unknown";
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         try
         {
             logger.LogInformation("Starting token manager");
-            
-            // subscribe to the event
-            // event handler method is an async lambda
+
             tokenProvider.ReachingRangeLimit += async (sender, args) =>
             {
                 await AssignNewRangeAsync(cancellationToken);
@@ -25,22 +24,22 @@ public class TokenManager(
 
             await AssignNewRangeAsync(cancellationToken);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            logger.LogCritical(ex, "TokenManager failed to start due to an error");
-            environmentManager.FatalError(); // Stop the application with a fatal error    
+            logger.LogCritical(ex, "TokenManager failed to start due to an error.");
+            environmentManager.FatalError(); // Stop the application with a fatal error
         }
     }
-    
+
     private async Task AssignNewRangeAsync(CancellationToken cancellationToken)
     {
         var range = await client.AssignRangeAsync(_machineIdentifier, cancellationToken);
         
-        if(range is null)
+        if (range is null)
         {
             throw new Exception("No tokens assigned");
         }
-        
+
         tokenProvider.AssignRange(range);
         logger.LogInformation("Assigned range: {Start}-{End}", range.Start, range.End);
     }
