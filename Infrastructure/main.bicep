@@ -13,6 +13,14 @@ module keyVault 'modules/secrets/key-vault.bicep' = {
   }
 }
 
+module logAnalyticsWorkspace 'modules/telemetry/log-analytics.bicep' = {
+  name: 'logAnalyticsWorkspaceDeployment'
+  params: {
+    name: 'log-analytics-ws-${uniqueId}'
+    location: location
+  }
+}
+
 module apiService 'modules/compute/appservice.bicep' = {
   name: 'apiDeployment'
   params: {
@@ -20,6 +28,7 @@ module apiService 'modules/compute/appservice.bicep' = {
     appServicePlanName: 'plan-api-${uniqueId}'
     location: location
     keyVaultName: keyVaultName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
     appSettings: [
       {
         name: 'DatabaseName'
@@ -69,6 +78,7 @@ module apiService 'modules/compute/appservice.bicep' = {
   }
   dependsOn: [
     keyVault
+    logAnalyticsWorkspace
   ]
 }
 
@@ -79,9 +89,11 @@ module tokenRangeService 'modules/compute/appservice.bicep' = {
       appServicePlanName: 'plan-token-range-${uniqueId}'
       location: location
       keyVaultName: keyVaultName
+      logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
   }
   dependsOn: [
     keyVault
+    logAnalyticsWorkspace
   ]
 }
 
@@ -92,6 +104,7 @@ module redirectApiService 'modules/compute/appservice.bicep' = {
     appServicePlanName: 'plan-redirect-${uniqueId}'
     location: location
     keyVaultName: keyVaultName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
     appSettings: [
       {
         name: 'DatabaseName'
@@ -105,6 +118,7 @@ module redirectApiService 'modules/compute/appservice.bicep' = {
   }
   dependsOn: [
     keyVault
+    logAnalyticsWorkspace
   ]
 }
 
@@ -150,6 +164,7 @@ module cosmosTriggerFunction 'modules/compute/function.bicep' = {
     appServicePlanName: 'plan-cosmos-trigger-${uniqueId}'
     storageAccountConnectionString: storageAccount.outputs.storageConnectionString
     keyVaultName: keyVaultName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
     appSettings: [
       {
         name: 'CosmosDbConnection'
@@ -169,6 +184,7 @@ module cosmosTriggerFunction 'modules/compute/function.bicep' = {
     keyVault
     storageAccount
     cosmosDb
+    logAnalyticsWorkspace
   ]
 }
 
