@@ -35,7 +35,7 @@ jobs:
         env:
           REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
           REACT_APP_AUTHORITY: ${{ secrets.REACT_APP_AUTHORITY }}
-          REACT_APP_API_ENDPOINT: ${{ secrets.REACT_APP_API_ENDPOINT }}
+          REACT_APP_API_ENDPOINT: ${{ vars.REACT_APP_API_ENDPOINT }}
           
   build_and_deploy_stg:
     runs-on: ubuntu-latest
