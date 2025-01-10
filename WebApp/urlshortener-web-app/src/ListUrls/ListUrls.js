@@ -16,7 +16,7 @@ function ListUrls({ urls, continuationToken, onLoadMore }) {
             </a>
           </div>
         ))}
-      {continuationToken && <button onClick={onLoadMore}>Load More</button>}
+      {continuationToken && <button onClick={onLoadMore}>Load more</button>}
     </div>
   );
 }
