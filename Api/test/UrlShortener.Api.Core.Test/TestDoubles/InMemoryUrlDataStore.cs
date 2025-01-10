@@ -7,7 +7,7 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
 {
     public Task AddAsync(ShortenedUrl shortened, CancellationToken cancellationToken)
     {
-        Add(shortened.ShortUrlId, shortened);
+        Add(shortened.ShortUrl, shortened);
         return Task.CompletedTask;
     }
 }

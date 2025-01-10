@@ -39,6 +39,7 @@ function Home() {
         pageSize: 5,
       },
     });
+    
     setData((prev) => ({
       initialized: true,
       urls: [...prev.urls, ...response.data.urls],

@@ -14,8 +14,8 @@ public static class UrlResponseExtensions
     private static UrlItem MapToResponse(this UserUrlItem url, RedirectLinkBuilder redirectLinkBuilder)
     {
         return new UrlItem(
-            url.Id,
-            redirectLinkBuilder.Build(url.Id),
+            url.ShortUrl,
+            redirectLinkBuilder.LinkTo(url.ShortUrl),
             new Uri(url.LongUrl),
             url.CreatedOn);
     }
