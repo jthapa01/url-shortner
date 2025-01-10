@@ -1,8 +1,9 @@
-namespace UrlShortener.Core.Urls
+namespace UrlShortener.Core.Urls;
+
+public class RedirectLinkBuilder(Uri redirectServiceEndpoint)
 {
-    public class RedirectLinkBuilder(Uri redirectServiceEndpoint)
+    public Uri LinkTo(string shortUrl)
     {
-        public Uri Build(string shortUrlId) =>
-            new Uri(redirectServiceEndpoint, shortUrlId);
+        return new Uri(redirectServiceEndpoint, shortUrl);
     }
 }

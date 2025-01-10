@@ -4,11 +4,12 @@ using UrlShortener.Core.Urls.List;
 
 namespace UrlShortener.Tests.TestDoubles;
 
-public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataStore, IUserUrlsReader
+public class InMemoryUrlDataStore :
+    Dictionary<string, ShortenedUrl>, IUrlDataStore, IUserUrlsReader
 {
     public Task AddAsync(ShortenedUrl shortened, CancellationToken cancellationToken)
     {
-        Add(shortened.ShortUrlId, shortened);
+        Add(shortened.ShortUrl, shortened);
         return Task.CompletedTask;
     }
 
@@ -19,7 +20,7 @@ public class InMemoryUrlDataStore : Dictionary<string, ShortenedUrl>, IUrlDataSt
     {
         var data = Values
             .Where(u => u.CreatedBy == createdBy)
-            .Select((u, index) => (index, new UserUrlItem(u.ShortUrlId, u.LongUrl.ToString(), u.CreatedOn)))
+            .Select((u, index) => (index, new UserUrlItem(u.ShortUrl, u.LongUrl.ToString(), u.CreatedOn)))
             .Where(entry => continuationToken == null || entry.index > int.Parse(continuationToken))
             .Take(pageSize)
             .ToList();

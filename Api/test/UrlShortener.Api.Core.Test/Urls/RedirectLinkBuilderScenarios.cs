@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UrlShortener.Core.Urls;
 
 namespace UrlShortener.Api.Core.Test.Urls
@@ -16,7 +12,7 @@ namespace UrlShortener.Api.Core.Test.Urls
             var redirectLinkBuilder = new RedirectLinkBuilder(redirectServiceEndpoint);
             var expectedUri = new Uri("https://redirect-service.com/r/abc123");
 
-            var result = redirectLinkBuilder.Build(shortUrlId);
+            var result = redirectLinkBuilder.LinkTo(shortUrlId);
             result.Should().Be(expectedUri);
         }
     }
