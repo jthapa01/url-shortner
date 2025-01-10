@@ -10,5 +10,5 @@ public class EnvironmentManager : IEnvironmentManager
 
 public interface IEnvironmentManager
 {
-    public void FatalError();    
+    public void FatalError();
 }

@@ -28,19 +28,20 @@ if (!string.IsNullOrEmpty(keyVaultName))
 
 builder.Services.AddHealthChecks()
     .AddCosmosHealthCheck(builder.Configuration)
-    .AddUrlGroup(new Uri(
-        new Uri(builder.Configuration["TokenRangeService:Endpoint"]!),
-        "healthz"),
+    .AddUrlGroup(
+        new Uri(
+            new Uri(builder.Configuration["TokenRangeService:Endpoint"]!),
+            "healthz"),
         name: "token-range-service");
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(TimeProvider.System)
     .AddSingleton<IEnvironmentManager, EnvironmentManager>();
 builder.Services
-    .AddUrlFeature()
+    .AddAddUrlFeature()
     .AddListUrlsFeature()
     .AddCosmosUrlDataStore(builder.Configuration);
 
@@ -51,7 +52,8 @@ builder.Services.AddSingleton(
 builder.Services.AddHttpClient("TokenRangeService",
     client =>
     {
-        client.BaseAddress = new Uri(builder.Configuration["TokenRangeService:Endpoint"]!);
+        client.BaseAddress =
+            new Uri(builder.Configuration["TokenRangeService:Endpoint"]!);
     });
 
 builder.Services.AddSingleton<ITokenRangeApiClient, TokenRangeApiClient>();
@@ -59,14 +61,11 @@ builder.Services.AddHostedService<TokenManager>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(options =>
-    {
-        builder.Configuration.Bind("AzureAd", options);
-        options.TokenValidationParameters.NameClaimType = "name";
-    },
-    options =>
-    {
-        builder.Configuration.Bind("AzureAd", options);
-    });
+        {
+            builder.Configuration.Bind("AzureAd", options);
+            options.TokenValidationParameters.NameClaimType = "name";
+        },
+        options => { builder.Configuration.Bind("AzureAd", options); });
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("AuthZPolicy", policyBuilder =>
@@ -77,33 +76,37 @@ builder.Services.AddAuthorizationBuilder()
 
 builder.Services.AddAuthorization(options =>
 {
-    options.DefaultPolicy = new AuthorizationPolicyBuilder(
-            JwtBearerDefaults.AuthenticationScheme)
-        .RequireAuthenticatedUser()
-        .Build();
-    // default, all incoming requests will be authorized the default policy
-    options.FallbackPolicy = options.FallbackPolicy;
+    options.DefaultPolicy =
+        new AuthorizationPolicyBuilder(
+                JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+    // By default, all incoming requests will be authorized according to 
+    // the default policy    
+    options.FallbackPolicy = options.DefaultPolicy;
 });
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowWebApp", policy =>
     {
-        if(builder.Configuration["WebAppEndpoints"] is null)
+        if (builder.Configuration["WebAppEndpoints"] is null)
             return;
-        
+
         var origins = builder.Configuration["WebAppEndpoints"]!.Split(",");
-        policy.WithOrigins(origins.ToArray())
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+
+        policy
+            .WithOrigins(origins.ToArray())
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
 var telemetryConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
-if(telemetryConnectionString is not null)
-{
-    builder.Services.AddOpenTelemetry().UseAzureMonitor();
-}
+if (telemetryConnectionString is not null)
+    builder.Services
+        .AddOpenTelemetry()
+        .UseAzureMonitor();
 
 var app = builder.Build();
 
@@ -120,6 +123,7 @@ app.MapHealthChecks("/healthz")
     .AllowAnonymous();
 
 app.UseCors("AllowWebApp");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -133,7 +137,6 @@ app.MapPost("/api/urls",
         CancellationToken cancellationToken) =>
     {
         var email = context.User.GetUserEmail();
-        
         var requestWithUser = request with
         {
             CreatedBy = email
@@ -149,15 +152,16 @@ app.MapPost("/api/urls",
             result.Value);
     });
 
-app.MapGet("/api/urls", async (
-        HttpContext context,
+app.MapGet("/api/urls", async (HttpContext context,
         ListUrlsHandler handler,
         int? pageSize,
         [FromQuery(Name = "continuation")] string? continuationToken,
         CancellationToken cancellationToken) =>
     {
-        var request = new ListUrlsRequest(context.User.GetUserEmail(), pageSize, continuationToken);
+        var request = new ListUrlsRequest(context.User.GetUserEmail(), pageSize,
+            continuationToken);
         var urls = await handler.HandleAsync(request, cancellationToken);
+
         return urls;
     }
 );

@@ -5,9 +5,9 @@ namespace UrlShortener.Api.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static string GetUserEmail(this ClaimsPrincipal claimsPrincipal)
+    public static string GetUserEmail(this ClaimsPrincipal self)
     {
-        return claimsPrincipal.FindFirstValue("preferred_username")
+        return self.FindFirstValue("preferred_username")
                ?? throw new AuthenticationException("Missing preferred_username claim");
     }
 }

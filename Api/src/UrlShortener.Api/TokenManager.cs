@@ -2,22 +2,31 @@ using UrlShortener.Core;
 
 namespace UrlShortener.Api;
 
-public class TokenManager(
-    ITokenRangeApiClient client,
-    ILogger<TokenManager> logger,
-    TokenProvider tokenProvider,
-    IEnvironmentManager environmentManager)
-    : IHostedService
+public class TokenManager : IHostedService
 {
-    private readonly string _machineIdentifier = Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") ?? "unknown";
+    private readonly ITokenRangeApiClient _client;
+    private readonly ILogger<TokenManager> _logger;
+    private readonly string _machineIdentifier;
+    private readonly TokenProvider _tokenProvider;
+    private readonly IEnvironmentManager _environmentManager;
+
+    public TokenManager(ITokenRangeApiClient client, ILogger<TokenManager> logger, 
+        TokenProvider tokenProvider, IEnvironmentManager environmentManager)
+    {
+        _logger = logger;
+        _tokenProvider = tokenProvider;
+        _environmentManager = environmentManager;
+        _client = client;
+        _machineIdentifier = Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") ?? "unknown";
+    }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         try
         {
-            logger.LogInformation("Starting token manager");
+            _logger.LogInformation("Starting token manager");
 
-            tokenProvider.ReachingRangeLimit += async (sender, args) =>
+            _tokenProvider.ReachingRangeLimit += async (sender, args) =>
             {
                 await AssignNewRangeAsync(cancellationToken);
             };
@@ -26,27 +35,27 @@ public class TokenManager(
         }
         catch (Exception ex)
         {
-            logger.LogCritical(ex, "TokenManager failed to start due to an error.");
-            environmentManager.FatalError(); // Stop the application with a fatal error
+            _logger.LogCritical(ex, "TokenManager failed to start due to an error.");
+            _environmentManager.FatalError(); // Stop the application with a fatal error
         }
     }
 
     private async Task AssignNewRangeAsync(CancellationToken cancellationToken)
     {
-        var range = await client.AssignRangeAsync(_machineIdentifier, cancellationToken);
+        var range = await _client.AssignRangeAsync(_machineIdentifier, cancellationToken);
         
         if (range is null)
         {
             throw new Exception("No tokens assigned");
         }
 
-        tokenProvider.AssignRange(range);
-        logger.LogInformation("Assigned range: {Start}-{End}", range.Start, range.End);
+        _tokenProvider.AssignRange(range);
+        _logger.LogInformation("Assigned range: {Start}-{End}", range.Start, range.End);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        logger.LogInformation("Stopping token manager");
+        _logger.LogInformation("Stopping token manager");
         return Task.CompletedTask;
     }
 }

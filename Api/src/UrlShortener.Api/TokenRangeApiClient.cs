@@ -5,9 +5,9 @@ using UrlShortener.Core;
 
 namespace UrlShortener.Api;
 
-public class TokenRangeApiClient(IHttpClientFactory httpClientFactory) : ITokenRangeApiClient
+public class TokenRangeApiClient : ITokenRangeApiClient
 {
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient("TokenRangeService");
+    private readonly HttpClient _httpClient;
 
     private static readonly AsyncRetryPolicy<HttpResponseMessage> RetryPolicy =
         HttpPolicyExtensions
@@ -15,6 +15,11 @@ public class TokenRangeApiClient(IHttpClientFactory httpClientFactory) : ITokenR
             .WaitAndRetryAsync(3, retryAttempt =>
                 TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
+
+    public TokenRangeApiClient(IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient("TokenRangeService");
+    }
 
     public async Task<TokenRange?> AssignRangeAsync(string machineKey, CancellationToken cancellationToken)
     {

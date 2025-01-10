@@ -20,4 +20,5 @@ public static class Base62EncodingExtensions
         
         return new string(result.ToArray());
     }
+    
 }
