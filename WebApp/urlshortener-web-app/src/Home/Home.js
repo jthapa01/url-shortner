@@ -65,9 +65,9 @@ function Home() {
 
   return (
     <div className="container">
-      <h1>URL Shortener</h1>
+      <h1>Dometrain URL Shortener</h1>
       <div className="header">
-        <LogoutButton onLogout={handleLogout} />
+        <LogoutButton onLogout={handleLogout}></LogoutButton>
       </div>
       <UrlForm onSubmit={handleSubmit} />
       <ListUrls
