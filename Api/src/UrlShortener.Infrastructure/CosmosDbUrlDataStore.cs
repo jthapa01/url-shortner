@@ -5,28 +5,42 @@ using UrlShortener.Core.Urls.Add;
 
 namespace UrlShortener.Infrastructure;
 
-public class CosmosDbUrlDataStore(Container container) : IUrlDataStore
+public class CosmosDbUrlDataStore : IUrlDataStore
 {
+    private readonly Container _container;
+
+    public CosmosDbUrlDataStore(Container container)
+    {
+        _container = container;
+    }
+
     public async Task AddAsync(ShortenedUrl shortened, CancellationToken cancellationToken)
     {
         var document = (ShortenedUrlCosmos)shortened;
-        await container.CreateItemAsync(document,
+        await _container.CreateItemAsync(document,
             new PartitionKey(document.PartitionKey),
             cancellationToken: cancellationToken);
     }
 
-    internal class ShortenedUrlCosmos(string longUrl, string shortUrl, string createdBy, DateTimeOffset createdOn)
+    internal class ShortenedUrlCosmos
     {
-        public string LongUrl { get; } = longUrl;
+        public string LongUrl { get; }
 
-        [JsonProperty(PropertyName = "id")]
-        public string ShortUrl { get; } = shortUrl;
+        [JsonProperty(PropertyName = "id")] // Cosmos DB Unique Identifier
+        public string ShortUrl { get; }
 
-        public DateTimeOffset CreatedOn { get; } = createdOn;
+        public DateTimeOffset CreatedOn { get; }
+        public string CreatedBy { get; }
 
-        public string CreatedBy { get; } = createdBy;
+        public string PartitionKey => ShortUrl[..1]; // Cosmos DB Partition Key
 
-        public string PartitionKey => ShortUrl[..1];
+        public ShortenedUrlCosmos(string longUrl, string shortUrl, string createdBy, DateTimeOffset createdOn)
+        {
+            LongUrl = longUrl;
+            ShortUrl = shortUrl;
+            CreatedOn = createdOn;
+            CreatedBy = createdBy;
+        }
 
         public static implicit operator ShortenedUrl(ShortenedUrlCosmos url) =>
             new(new Uri(url.LongUrl), url.ShortUrl, url.CreatedBy, url.CreatedOn);
