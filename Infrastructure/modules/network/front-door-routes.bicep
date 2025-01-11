@@ -48,7 +48,7 @@ resource originRedirect 'Microsoft.Cdn/profiles/originGroups/origins@2024-02-01'
   }
 }
 
-resource routeRedirect 'Microsoft.Cdn/profiles/routes@2024-02-01' = {
+resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
   parent: endpoint
   name: 'redirect-route'
   properties: {
