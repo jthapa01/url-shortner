@@ -1,6 +1,7 @@
 param location string = resourceGroup().location
 @secure()
 param pgSqlPassword string
+param cosmosDbConnSecretVersion string
 
 var uniqueId = uniqueString(resourceGroup().id)
 var keyVaultName = 'kv-${uniqueId}'
@@ -168,7 +169,7 @@ module cosmosTriggerFunction 'modules/compute/function.bicep' = {
     appSettings: [
       {
         name: 'CosmosDbConnection'
-        value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/CosmosDb--ConnectionString/)'
+        value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/CosmosDb--ConnectionString/${cosmosDbConnSecretVersion})'
       }
       {
         name: 'TargetDatabaseName'
