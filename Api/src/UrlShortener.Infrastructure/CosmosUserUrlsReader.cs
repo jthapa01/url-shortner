@@ -5,15 +5,8 @@ using UrlShortener.Core.Urls.List;
 
 namespace UrlShortener.Infrastructure;
 
-public class CosmosUserUrlsReader : IUserUrlsReader
+public class CosmosUserUrlsReader(Container container) : IUserUrlsReader
 {
-    private readonly Container _container;
-
-    public CosmosUserUrlsReader(Container container)
-    {
-        _container = container;
-    }
-    
     public async Task<UserUrls> GetAsync(string createdBy, 
         int pageSize,
         string? continuationToken,
@@ -27,7 +20,7 @@ public class CosmosUserUrlsReader : IUserUrlsReader
             ? null
             : Encoding.UTF8.GetString(Convert.FromBase64String(continuationToken));
         
-        var iterator = _container.GetItemQueryIterator<ShortenedUrlEntity>(query,
+        var iterator = container.GetItemQueryIterator<ShortenedUrlEntity>(query,
             continuationToken: queryContinuationToken,
             requestOptions: new QueryRequestOptions
             {
@@ -60,23 +53,17 @@ public class CosmosUserUrlsReader : IUserUrlsReader
     }
 }
 
-public class ShortenedUrlEntity
+public class ShortenedUrlEntity(
+    string longUrl,
+    string shortUrl,
+    DateTimeOffset createdOn)
 {
-    public string LongUrl { get; }
+    public string LongUrl { get; } = longUrl;
 
     [JsonProperty(PropertyName = "id")] // Cosmos DB Unique Identifier
-    public string ShortUrl { get; }
+    public string ShortUrl { get; } = shortUrl;
 
-    public DateTimeOffset CreatedOn { get; }
-    
-
-    public ShortenedUrlEntity(string longUrl, string shortUrl, 
-        DateTimeOffset createdOn)
-    {
-        LongUrl = longUrl;
-        ShortUrl = shortUrl;
-        CreatedOn = createdOn;
-    }
+    public DateTimeOffset CreatedOn { get; } = createdOn;
 }
 
 

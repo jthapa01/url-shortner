@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace UrlShortener.Core;
 
-public class TokenProvider
+public sealed class TokenProvider
 {
     private readonly object _tokenLock = new();
     private readonly ConcurrentQueue<TokenRange> _ranges = new();
@@ -50,7 +50,7 @@ public class TokenProvider
 
     public event EventHandler? ReachingRangeLimit;
 
-    protected virtual void OnRangeThresholdReached(EventArgs e)
+    private void OnRangeThresholdReached(EventArgs e)
     {
         ReachingRangeLimit?.Invoke(this, e);
     }

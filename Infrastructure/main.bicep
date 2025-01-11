@@ -5,7 +5,7 @@ param pgSqlPassword string
 var uniqueId = uniqueString(resourceGroup().id)
 var keyVaultName = 'kv-${uniqueId}'
 
-module keyVault 'modules/secrets/key-vault.bicep' = {
+module keyVault 'modules/secrets/keyvault.bicep' = {
   name: 'keyVaultDeployment'
   params: {
     vaultName: keyVaultName
@@ -16,8 +16,8 @@ module keyVault 'modules/secrets/key-vault.bicep' = {
 module logAnalyticsWorkspace 'modules/telemetry/log-analytics.bicep' = {
   name: 'logAnalyticsWorkspaceDeployment'
   params: {
-    name: 'log-analytics-ws-${uniqueId}'
     location: location
+    name: 'log-analytics-ws-${uniqueId}'
   }
 }
 
@@ -85,11 +85,11 @@ module apiService 'modules/compute/appservice.bicep' = {
 module tokenRangeService 'modules/compute/appservice.bicep' = {
   name: 'tokenRangeServiceDeployment'
   params: {
-      appName: 'token-range-service-${uniqueId}'
-      appServicePlanName: 'plan-token-range-${uniqueId}'
-      location: location
-      keyVaultName: keyVaultName
-      logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    appName: 'token-range-service-${uniqueId}'
+    appServicePlanName: 'plan-token-range-${uniqueId}'
+    location: location
+    keyVaultName: keyVaultName
+    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
   }
   dependsOn: [
     keyVault
@@ -140,7 +140,7 @@ module cosmosDb 'modules/storage/cosmos-db.bicep' = {
     location: location
     kind: 'GlobalDocumentDB'
     databaseName: 'urls'
-    locationName: 'eastus2'
+    locationName: 'Spain Central'
     keyVaultName: keyVaultName
   }
   dependsOn: [
@@ -159,11 +159,11 @@ module storageAccount 'modules/storage/storage-account.bicep' = {
 module cosmosTriggerFunction 'modules/compute/function.bicep' = {
   name: 'cosmosTriggerFunctionDeployment'
   params: {
+    appServicePlanName: 'plan-cosmos-trigger-${uniqueId}'
     name: 'cosmos-trigger-function-${uniqueId}'
     location: location
-    appServicePlanName: 'plan-cosmos-trigger-${uniqueId}'
-    storageAccountConnectionString: storageAccount.outputs.storageConnectionString
     keyVaultName: keyVaultName
+    storageAccountConnectionString: storageAccount.outputs.storageConnectionString
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
     appSettings: [
       {
@@ -209,11 +209,11 @@ module keyVaultRoleAssignment 'modules/secrets/key-vault-role-assignment.bicep' 
 }
 
 module entraApp 'modules/identity/entra-app.bicep' = {
-  name: 'entraAppWebDeployment'
+  name: 'entraAppWeb'
   params: {
     applicationName: 'web-${uniqueId}'
     spaRedirectUris: [
-      'http://localhost:3000/'
+      'http://localhost:3000/' // Not for PRD use
       staticWebApp.outputs.url
     ]
   }

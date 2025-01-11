@@ -1,16 +1,10 @@
 namespace UrlShortener.Core.Urls.Add;
 
-public class ShortUrlGenerator
+public class ShortUrlGenerator(TokenProvider tokenProvider)
 {
-    private readonly TokenProvider _tokenProvider;
-
-    public ShortUrlGenerator(TokenProvider tokenProvider)
-    {
-        _tokenProvider = tokenProvider;
-    }
     public string  GenerateUniqueUrl()
     {
-        return _tokenProvider
+        return tokenProvider
             .GetToken()
             .EncodeToBase62();
     }

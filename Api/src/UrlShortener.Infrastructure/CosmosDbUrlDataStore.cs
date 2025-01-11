@@ -5,19 +5,12 @@ using UrlShortener.Core.Urls.Add;
 
 namespace UrlShortener.Infrastructure;
 
-public class CosmosDbUrlDataStore : IUrlDataStore
+public class CosmosDbUrlDataStore(Container container) : IUrlDataStore
 {
-    private readonly Container _container;
-
-    public CosmosDbUrlDataStore(Container container)
-    {
-        _container = container;
-    }
-
     public async Task AddAsync(ShortenedUrl shortened, CancellationToken cancellationToken)
     {
         var document = (ShortenedUrlCosmos)shortened;
-        await _container.CreateItemAsync(document,
+        await container.CreateItemAsync(document,
             new PartitionKey(document.PartitionKey),
             cancellationToken: cancellationToken);
     }

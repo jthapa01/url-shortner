@@ -1,5 +1,4 @@
 using UrlShortener.Core;
-using UrlShortener.Core.Urls;
 using UrlShortener.Core.Urls.Add;
 using UrlShortener.Core.Urls.List;
 

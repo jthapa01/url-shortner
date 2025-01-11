@@ -36,13 +36,11 @@ resource updateApplicationWithSettings 'Microsoft.Graph/applications@v1.0' = {
   identifierUris: [
     'api://${application.appId}'
   ]
-  spa: {
-    redirectUris: spaRedirectUris
-  }
+  spa: { redirectUris: spaRedirectUris }
   web: {
     implicitGrantSettings: {
-      enableIdTokenIssuance: true
       enableAccessTokenIssuance: true
+      enableIdTokenIssuance: true
     }
     redirectUris: []
   }

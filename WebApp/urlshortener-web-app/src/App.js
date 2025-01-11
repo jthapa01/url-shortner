@@ -1,6 +1,6 @@
 import './App.css';
 import { PublicClientApplication } from "@azure/msal-browser";
-import { MsalProvider } from "@azure/msal-react";
+import {MsalProvider} from "@azure/msal-react";
 import Login from './Login/Login';
 
 const msalConfig = {

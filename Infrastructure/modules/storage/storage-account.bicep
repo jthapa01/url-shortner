@@ -17,6 +17,6 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
 
 var storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
 
-output storageConnectionString string = storageConnectionString
-output storageAccountName string = storageAccount.name
 output storageAccountId string = storageAccount.id
+output storageAccountName string = storageAccount.name
+output storageConnectionString string = storageConnectionString

@@ -4,23 +4,21 @@ using Testcontainers.PostgreSql;
 
 namespace UrlShortener.TokenRangeService.Tests;
 
-public class Fixture : WebApplicationFactory<ITokenRangeAssemblyMarker>, IAsyncLifetime
+public class Fixture :  WebApplicationFactory<ITokenRangeAssemblyMarker>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer;
-    private string ConnectionString => _postgreSqlContainer.GetConnectionString();
+    private readonly PostgreSqlContainer _postgresContainer = new PostgreSqlBuilder()
+        .Build();
+    private string ConnectionString => _postgresContainer.GetConnectionString();
 
-    public Fixture()
-    {
-        _postgreSqlContainer = new PostgreSqlBuilder()
-            .Build();
-    }
     public async Task InitializeAsync()
     {
-        await _postgreSqlContainer.StartAsync();
+        await _postgresContainer.StartAsync();
+        
         Environment.SetEnvironmentVariable("Postgres__ConnectionString", ConnectionString);
+        
         await InitializeSqlTable();
     }
-    
+
     private async Task InitializeSqlTable()
     {
         var tableSql = await File.ReadAllTextAsync(
@@ -35,7 +33,7 @@ public class Fixture : WebApplicationFactory<ITokenRangeAssemblyMarker>, IAsyncL
 
     public new async Task DisposeAsync()
     {
-        await _postgreSqlContainer.StopAsync();
+        await _postgresContainer.StopAsync();
         await base.DisposeAsync();
     }
 }

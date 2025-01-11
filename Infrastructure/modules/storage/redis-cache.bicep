@@ -2,7 +2,7 @@ param name string
 param location string
 param keyVaultName string
 
-resource redis 'Microsoft.Cache/redis@2024-11-01' = {
+resource redis 'Microsoft.Cache/redis@2023-08-01' = {
   name: name
   location: location
   properties: {
@@ -19,12 +19,12 @@ resource redis 'Microsoft.Cache/redis@2024-11-01' = {
   }
 }
 
-resource KeyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
 
 resource redisCacheConnectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: KeyVault
+  parent: keyVault
   name: 'Redis--ConnectionString'
   properties: {
     value: '${redis.name}.redis.cache.windows.net:6380,password=${redis.listKeys().primaryKey},ssl=True,abortConnect=False'

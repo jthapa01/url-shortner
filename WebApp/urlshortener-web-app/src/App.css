@@ -38,14 +38,14 @@
 }
 
 button {
-  background: #f0f0f0;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
+    background: #f0f0f0;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 button:hover {
-  background: #e0e0e0;
+    background: #e0e0e0;
 }

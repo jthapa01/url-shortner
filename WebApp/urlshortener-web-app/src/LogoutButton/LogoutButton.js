@@ -2,11 +2,11 @@ import "./LogoutButton.css";
 import React from "react";
 
 function LogoutButton({ onLogout }) {
-  return (
-    <button className="logout" onClick={onLogout}>
-      Logout
-    </button>
-  );
+
+    return (
+        <button onClick={onLogout} className="logout">Logout</button>
+    );
+
 }
 
-export default LogoutButton;
+export default LogoutButton

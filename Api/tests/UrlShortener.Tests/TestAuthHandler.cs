@@ -16,13 +16,16 @@ public class TestAuthHandler(
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, "TestUser"),
-            new Claim("preferred_username", "testuser@gmail.com"),
+            new Claim(ClaimTypes.Name, "Test user"),
+            new Claim("preferred_username", "gui@guiferreira.me"),
         };
         var identity = new ClaimsIdentity(claims, "Test");
         var principal = new ClaimsPrincipal(identity);
-        var ticket = new AuthenticationTicket(principal, "TestScheme");
+        var ticket = new AuthenticationTicket(principal, 
+            "TestScheme");
+
         var result = AuthenticateResult.Success(ticket);
+
         return Task.FromResult(result);
     }
 }
