@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace UrlShortener.Core;
 
-public sealed class TokenProvider
+public class TokenProvider
 {
     private readonly object _tokenLock = new();
     private readonly ConcurrentQueue<TokenRange> _ranges = new();
