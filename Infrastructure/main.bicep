@@ -217,6 +217,8 @@ module entraApp 'modules/identity/entra-app.bicep' = {
     spaRedirectUris: [
       'http://localhost:3000/' // Not for PRD use
       staticWebApp.outputs.url
+      'https://${frontDoor.outputs.endpointHostName}'
+      'https://${customDomain}'
     ]
   }
 }
