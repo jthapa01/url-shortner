@@ -1,8 +1,8 @@
 param location string = resourceGroup().location
-param cosmosDbConnSecretVersion string
 @secure()
 param pgSqlPassword string
 
+param cosmosDbConnSecretVersion string
 var uniqueId = uniqueString(resourceGroup().id)
 var keyVaultName = 'kv-${uniqueId}'
 
