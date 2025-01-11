@@ -2,6 +2,7 @@ param location string = resourceGroup().location
 @secure()
 param pgSqlPassword string
 param cosmosDbConnSecretVersion string
+param customDomain string
 
 var uniqueId = uniqueString(resourceGroup().id)
 var keyVaultName = 'kv-${uniqueId}'
@@ -238,4 +239,32 @@ module staticWebApp 'modules/web/static-web-app.bicep' = {
     name: 'web-app-${uniqueId}'
     location: location
   }
+}
+
+module frontDoor 'modules/network/front-door.bicep' = {
+  name: 'frontDoorDeployment'
+  params: {
+    endpointName: 'endpoint-${uniqueId}'
+    profileName: 'front-door-${uniqueId}'
+    wafPolicyName: 'waf${uniqueId}'
+    customDomainName: customDomain
+  }
+}
+
+module frontDoorRoutes 'modules/network/front-door-routes.bicep' = {
+  name: 'frontDoorRoutesDeployment'
+  params: {
+    profileName: 'front-door-${uniqueId}'
+    endpointName: 'endpoint-${uniqueId}'
+    uniqueId: uniqueId
+    redirectApiHostName: redirectApiService.outputs.hostname
+    apiHostName: apiService.outputs.hostname
+    webHostName: staticWebApp.outputs.hostname
+    customDomainId: frontDoor.outputs.customDomainId
+  }
+  dependsOn: [
+    redirectApiService
+    apiService
+    staticWebApp
+  ]
 }
