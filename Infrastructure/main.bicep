@@ -2,9 +2,9 @@ param location string = resourceGroup().location
 @secure()
 param pgSqlPassword string
 
-param cosmosDbConnSecretVersion string
 var uniqueId = uniqueString(resourceGroup().id)
 var keyVaultName = 'kv-${uniqueId}'
+var cosmosDbConnSecretVersion = 
 
 module keyVault 'modules/secrets/keyvault.bicep' = {
   name: 'keyVaultDeployment'
