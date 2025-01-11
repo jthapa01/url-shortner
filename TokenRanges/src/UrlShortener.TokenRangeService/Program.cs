@@ -16,22 +16,23 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration["Postgres:ConnectionString"]!);
 
 builder.Services.AddSingleton(
-    new TokenRangeManger(builder.Configuration["Postgres:ConnectionString"]!));
+    new TokenRangeManager(builder.Configuration["Postgres:ConnectionString"]!));
 
 var telemetryConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 if (telemetryConnectionString is not null)
-{
-    builder.Services.AddOpenTelemetry().UseAzureMonitor();
-}
+    builder.Services
+        .AddOpenTelemetry()
+        .UseAzureMonitor();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
 app.MapHealthChecks("/healthz");
 
-app.MapGet("/", () => "TokenRanges service");
+app.MapGet("/", () => "TokenRanges Service");
 app.MapPost("/assign",
-    async (AssignTokenRangeRequest request, TokenRangeManger manager) =>
+    async (AssignTokenRangeRequest request, TokenRangeManager manager) =>
     {
         var range = await manager.AssignRangeAsync(request.Key);
 

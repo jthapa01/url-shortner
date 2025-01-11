@@ -7,7 +7,7 @@ param appSettings array = []
 
 module appInsights '../telemetry/app-insights.bicep' = {
   name: '${appName}AppInsightsDeployment'
-  params : {
+  params: {
     location: location
     name: 'app-insights-${appName}'
     logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
@@ -43,10 +43,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           }
           {
             name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-            value: appInsights.outputs.instrumentationKey
+            value: appInsights.outputs.instrumentrationKey
           }
           {
-            name: 'APPINSIGHTS_CONNECTION_STRING'
+            name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
             value: appInsights.outputs.connectionString
           }
         ],

@@ -2,10 +2,10 @@ using Npgsql;
 
 namespace UrlShortener.TokenRangeService;
 
-internal class TokenRangeManger(string connectionString)
+internal class TokenRangeManager(string connectionString)
 {
-    private const int DefaultRangeSize = 1000;
-    
+    private const int DefaultRangeSize = 1000; 
+
     private readonly string _sqlQuery = 
         $$"""
              INSERT INTO "TokenRanges" ("MachineIdentifier", "Start", "End")
@@ -16,7 +16,7 @@ internal class TokenRangeManger(string connectionString)
              )
              RETURNING "Id", "MachineIdentifier", "Start", "End";
         """;
-    
+
     public async Task<TokenRangeResponse> AssignRangeAsync(string machineIdentifier)
     {
         await using var connection = new NpgsqlConnection(connectionString);

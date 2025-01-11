@@ -7,7 +7,8 @@ namespace UrlShortener.TokenRangeService.Tests;
 public class AssignTokenRangeScenarios(Fixture fixture) : IClassFixture<Fixture>
 {
     private readonly HttpClient _client = fixture.CreateClient();
-    
+
+
     [Fact]
     public async Task Should_return_range_when_requested()
     {
@@ -37,7 +38,7 @@ public class AssignTokenRangeScenarios(Fixture fixture) : IClassFixture<Fixture>
             .ReadFromJsonAsync<TokenRangeResponse>();
         tokenRange2!.Start.Should().BeGreaterThan(tokenRange1!.End);
     }
-    
+
     [Fact]
     public async Task Should_not_repeat_range_on_multiple_requests()
     {
@@ -55,6 +56,8 @@ public class AssignTokenRangeScenarios(Fixture fixture) : IClassFixture<Fixture>
                 ranges.Add(range!);
             }
         });
-        ranges.Should().OnlyHaveUniqueItems();
+
+        ranges.Should().OnlyHaveUniqueItems(x => x.Start);
+        ranges.Should().OnlyHaveUniqueItems(x => x.End);
     }
 }

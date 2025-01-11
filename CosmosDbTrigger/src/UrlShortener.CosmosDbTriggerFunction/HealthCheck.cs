@@ -9,13 +9,14 @@ public class HealthCheck(HealthCheckService healthCheck)
 {
     [Function(nameof(HealthCheck))]
     public async Task<IActionResult> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous,
-            "get",
+        [HttpTrigger(AuthorizationLevel.Anonymous, 
+            "get", 
             "post", Route = "healthz")] HttpRequestData req,
-        FunctionContext executionContext)
+        FunctionContext context)
     {
         var healthStatus = await healthCheck.CheckHealthAsync();
         return new OkObjectResult(
-            Enum.GetName(typeof(HealthStatus), healthStatus.Status));
+            Enum.GetName(typeof(HealthStatus), 
+                healthStatus.Status));
     }
 }

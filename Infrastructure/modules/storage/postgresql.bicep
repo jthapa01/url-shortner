@@ -40,7 +40,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
 
-resource postgresDbConnectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+resource cosmosDbConnectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: keyVault
   name: 'Postgres--ConnectionString'
   properties: {

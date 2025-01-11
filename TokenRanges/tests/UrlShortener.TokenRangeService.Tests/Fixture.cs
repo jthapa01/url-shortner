@@ -6,14 +6,10 @@ namespace UrlShortener.TokenRangeService.Tests;
 
 public class Fixture : WebApplicationFactory<ITokenRangeAssemblyMarker>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer;
+    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
+        .Build();
     private string ConnectionString => _postgreSqlContainer.GetConnectionString();
 
-    public Fixture()
-    {
-        _postgreSqlContainer = new PostgreSqlBuilder()
-            .Build();
-    }
     public async Task InitializeAsync()
     {
         await _postgreSqlContainer.StartAsync();

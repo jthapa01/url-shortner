@@ -2,9 +2,8 @@ using StackExchange.Redis;
 
 namespace UrlShortener.RedirectApi.Infrastructure;
 
-public class RedisUrlReader(IShortenedUrlReader reader, 
-    IConnectionMultiplexer redis,
-    ILogger<RedisUrlReader> logger) : IShortenedUrlReader
+public class RedisUrlReader(IShortenedUrlReader reader, IConnectionMultiplexer redis, ILogger<RedisUrlReader> logger)
+    : IShortenedUrlReader
 {
     private readonly IDatabase _cache = redis.GetDatabase();
 
@@ -16,9 +15,9 @@ public class RedisUrlReader(IShortenedUrlReader reader,
             if (cachedUrl.HasValue)
                 return new ReadLongUrlResponse(true, cachedUrl.ToString());
         }
-        catch (RedisException ex)
+        catch (RedisException redisException)
         {
-            logger.LogError(ex, "Failed to read from cache");
+            logger.LogError(redisException, "Failed to read from cache");
         }
 
         var getUrlResponse = await reader.GetLongUrlAsync(shortUrl, cancellationToken);
@@ -30,9 +29,9 @@ public class RedisUrlReader(IShortenedUrlReader reader,
         {
             await _cache.StringSetAsync(shortUrl, getUrlResponse.LongUrl);
         }
-        catch (RedisException ex)
+        catch (RedisException redisException)
         {
-            logger.LogError(ex, "Failed to write to cache");
+            logger.LogError(redisException, "Failed to write to cache");
         }
 
         return getUrlResponse;

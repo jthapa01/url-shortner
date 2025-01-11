@@ -10,9 +10,12 @@ using UrlShortener.RedirectApi.Infrastructure;
 using UrlShortener.RedirectApi.Tests.TestDoubles;
 
 namespace UrlShortener.RedirectApi.Tests;
+
 public class ApiFixture : WebApplicationFactory<IRedirectApiAssemblyMarker>, IAsyncLifetime
 {
-    private readonly RedisContainer _redisContainer = new RedisBuilder().Build();
+    private readonly RedisContainer _redisContainer = new RedisBuilder()
+        .Build();
+
     public string RedisConnectionString => _redisContainer.GetConnectionString();
 
     public InMemoryShortenedUrlReader ShortenedUrlReader { get; } = new();
@@ -29,15 +32,16 @@ public class ApiFixture : WebApplicationFactory<IRedirectApiAssemblyMarker>, IAs
             services =>
             {
                 services.Remove<IShortenedUrlReader>();
-                services.AddSingleton<IShortenedUrlReader>(s =>
-                    new RedisUrlReader(ShortenedUrlReader,
-                        ConnectionMultiplexer.Connect(RedisConnectionString),
-                        s.GetRequiredService<ILogger<RedisUrlReader>>())
+                services.AddSingleton<IShortenedUrlReader>(
+                    s =>
+                        new RedisUrlReader(ShortenedUrlReader,
+                            ConnectionMultiplexer.Connect(RedisConnectionString),
+                            s.GetRequiredService<ILogger<RedisUrlReader>>())
                 );
             });
         base.ConfigureWebHost(builder);
     }
-    
+
     public Task DisposeAsync()
     {
         return _redisContainer.StopAsync();

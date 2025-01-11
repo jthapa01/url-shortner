@@ -29,9 +29,9 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
 }
 
 resource function 'Microsoft.Web/sites@2023-12-01' = {
-  name: name
-  location: location
   kind: 'functionapp,linux'
+  location: location
+  name: name
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
@@ -45,7 +45,7 @@ resource function 'Microsoft.Web/sites@2023-12-01' = {
       appSettings: concat(
         [
           {
-            name: 'keyVaultName'
+            name: 'KeyVaultName'
             value: keyVaultName
           }
           {
@@ -72,14 +72,14 @@ resource function 'Microsoft.Web/sites@2023-12-01' = {
             name: 'WEBSITE_RUN_FROM_PACKAGE'
             value: '1'
           }
-         {
-           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-           value: appInsights.outputs.instrumentationKey
-         }
-         {
-           name: 'APPINSIGHTS_CONNECTION_STRING'
-           value: appInsights.outputs.connectionString
-         }
+          {
+            name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+            value: appInsights.outputs.instrumentrationKey
+          }
+          {
+            name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+            value: appInsights.outputs.connectionString
+          }
         ],
         appSettings
       )
