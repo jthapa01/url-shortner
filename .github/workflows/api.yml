@@ -1,6 +1,3 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 name: API
 
 on:
@@ -32,8 +29,8 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: dotnet publish
-      run: dotnet publish Api/src/UrlShortener.Api -c Release -o ${{env.DOTNET_ROOT}}/myapp
-    - name: Upload artifact
+      run: dotnet publish Api/src/UrlShortener.Api -c Release -o ${{env.DOTNET_ROOT}}/myapp 
+    - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
       with:
         name: .net-app
@@ -43,9 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment: Development
-    
+
     steps:
-      - name: Download artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
@@ -57,13 +54,14 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
           package: .
-  
+
+
   deploy-stg:
     runs-on: ubuntu-latest
     needs: deploy-dev
     environment: Staging
     steps:
-      - name: Download artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
@@ -83,7 +81,7 @@ jobs:
     environment: Production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - name: Download artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
