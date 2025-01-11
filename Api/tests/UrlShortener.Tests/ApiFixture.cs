@@ -12,9 +12,9 @@ using UrlShortener.Tests.TestDoubles;
 
 namespace UrlShortener.Tests;
 
-public abstract class ApiFixture : WebApplicationFactory<IApiAssemblyMarker>
+public class ApiFixture : WebApplicationFactory<IApiAssemblyMarker>
 {
-    protected ApiFixture()
+    public ApiFixture()
     {
         Environment.SetEnvironmentVariable("RedirectService__Endpoint", "https://urlshortener.tests/r/");
     }
