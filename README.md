@@ -75,3 +75,8 @@ az deployment group create --resource-group $rgName --template-file ./Infrastruc
 
 ### Utilities
 - Base62 converter url: https://math.tools/calculator/base/10-62
+
+# GitHub Actions
+
+- https://learn.microsoft.com/en-us/azure/container-apps/tutorial-ci-cd-runners-jobs?tabs=bash&pivots=container-apps-jobs-self-hosted-ci-cd-azure-pipelines
+- https://api.github.com/meta
