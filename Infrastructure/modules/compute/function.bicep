@@ -2,6 +2,7 @@ param location string
 param appServicePlanName string
 param name string
 param keyVaultName string
+
 @secure()
 param storageAccountConnectionString string
 param logAnalyticsWorkspaceId string
