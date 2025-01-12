@@ -6,9 +6,7 @@ param customDomainName string
 resource profile 'Microsoft.Cdn/profiles@2024-02-01' = {
   name: profileName
   location: 'Global'
-  sku: {
-    name: 'Standard_AzureFrontDoor'
-  }
+  sku: { name: 'Standard_AzureFrontDoor' }
 }
 
 resource endpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
@@ -20,7 +18,7 @@ resource endpoint 'Microsoft.Cdn/profiles/afdEndpoints@2024-02-01' = {
   }
 }
 
-resource customDomain 'Microsoft.Cdn/profiles/customDomains@2024-02-01' = {
+resource customDomain 'Microsoft.Cdn/profiles/customdomains@2024-02-01' = {
   parent: profile
   name: replace(customDomainName, '.', '-')
   properties: {
@@ -32,12 +30,10 @@ resource customDomain 'Microsoft.Cdn/profiles/customDomains@2024-02-01' = {
   }
 }
 
-resource wafPolicy 'Microsoft.Network/frontDoorWebApplicationFirewallPolicies@2021-09-01' = {
+resource wafPolicy 'Microsoft.Network/frontDoorWebApplicationFirewallPolicies@2024-02-01' = {
   name: wafPolicyName
   location: 'Global'
-  sku: {
-    name: 'Standard_AzureFrontDoor'
-  }
+  sku: { name: 'Standard_AzureFrontDoor' }
   properties: {
     // // Managed Rules available on Premium
     // managedRules: {
@@ -47,7 +43,7 @@ resource wafPolicy 'Microsoft.Network/frontDoorWebApplicationFirewallPolicies@20
     //       ruleSetVersion: '3.2' 
     //     }
     //   ]
-    // }  
+    // }
     customRules: {
       rules: [
         {
@@ -82,14 +78,15 @@ resource securityPolicy 'Microsoft.Cdn/profiles/securityPolicies@2024-02-01' = {
       wafPolicy: {
         id: wafPolicy.id
       }
+
       associations: [
         {
           domains: [
             {
-              id: customDomain.id
+              id: endpoint.id
             }
             {
-              id: endpoint.id
+              id: customDomain.id
             }
           ]
           patternsToMatch: [

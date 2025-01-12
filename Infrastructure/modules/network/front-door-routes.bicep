@@ -75,7 +75,6 @@ resource routeRedirect 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' =
   ]
 }
 
-
 // API
 // --------------------
 
@@ -135,7 +134,6 @@ resource routeApi 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
     originApi
   ]
 }
-
 
 // Web
 // --------------------
@@ -214,6 +212,3 @@ resource routeWeb 'Microsoft.Cdn/profiles/afdEndpoints/routes@2024-02-01' = {
 }
 
 output endpointHostName string = endpoint.properties.hostName
-
-
-
