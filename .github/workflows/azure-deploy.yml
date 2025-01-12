@@ -11,7 +11,7 @@ on:
     - main
   paths:
     - Infrastructure/**
- workflow_dispatch: # manual trigger
+ workflow_dispatch: # manual workflow trigger
 
 permissions:
   id-token: write
