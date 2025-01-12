@@ -74,7 +74,7 @@ module apiService 'modules/compute/appservice.bicep' = {
       }
       {
         name: 'RedirectService__Endpoint'
-        value: '${redirectApiService.outputs.url}/r/'
+        value: 'https://${customDomain}/r/'
       }
     ]
   }
