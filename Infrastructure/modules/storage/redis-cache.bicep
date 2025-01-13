@@ -14,7 +14,7 @@ resource redis 'Microsoft.Cache/redis@2023-08-01' = {
       capacity: 0
     }
     redisVersion: '6.0'
-    publicNetworkAccess: 'Enabled'
+    publicNetworkAccess: 'Disabled'
     redisConfiguration: {
       'aad-enabled': 'True'
     }
@@ -42,7 +42,7 @@ resource redisCachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-02-0
     }
     privateLinkServiceConnections: [
       {
-        name: '${redis.name}-privateLinkServiceConnection'
+        name: '${redis.name}-privateendpoint'
         properties: {
           privateLinkServiceId: redis.id
           groupIds: [

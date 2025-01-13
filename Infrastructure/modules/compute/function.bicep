@@ -2,7 +2,6 @@ param location string
 param appServicePlanName string
 param name string
 param keyVaultName string
-
 @secure()
 param storageAccountConnectionString string
 param logAnalyticsWorkspaceId string
@@ -44,6 +43,18 @@ resource function 'Microsoft.Web/sites@2023-12-01' = {
       alwaysOn: true
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
+      publicNetworkAccess: 'Enabled'
+      ipSecurityRestrictionsDefaultAction: 'Deny'
+      scmIpSecurityRestrictionsDefaultAction: 'Deny'
+      scmIpSecurityRestrictions: [
+        {
+          name: 'AllowGHDeploy'
+          action: 'Allow'
+          priority: 100
+          tag: 'ServiceTag'
+          ipAddress: 'AzureCloud'
+        }
+      ]
       appSettings: concat(
         [
           {

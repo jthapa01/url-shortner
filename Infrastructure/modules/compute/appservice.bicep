@@ -39,16 +39,16 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
       linuxFxVersion: 'DOTNETCORE|8.0'
       healthCheckPath: '/healthz'
       publicNetworkAccess: 'Enabled'
-      ipSeurityRestrictionsDefaultAction: 'Deny'
+      ipSecurityRestrictionsDefaultAction: 'Deny'
       ipSecurityRestrictions: ipSecurityRestrictions
-      scmSecurityRestrctionsDefaultAction: 'Deny'
+      scmIpSecurityRestrictionsDefaultAction: 'Deny'
       scmIpSecurityRestrictions: [
         {
           name: 'AllowGHDeploy'
+          action: 'Allow'
           priority: 100
           tag: 'ServiceTag'
           ipAddress: 'AzureCloud'
-          action: 'Allow'
         }
       ]
       appSettings: concat(
