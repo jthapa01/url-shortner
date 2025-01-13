@@ -25,6 +25,9 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-
     }
     administratorLogin: administratorLogin
     administratorLoginPassword: administratorLoginPassword
+    network: {
+      publicNetworkAccess: 'Disabled'
+    }
   }
   resource database 'databases' = {
     name: 'ranges'
@@ -32,8 +35,8 @@ resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-
 }
 
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
-  name: '${name}-privateEndpoint'
   location: location
+  name: name
   properties: {
     subnet: {
       id: subnetId
@@ -41,12 +44,10 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-01-01' = {
     customNetworkInterfaceName: '${name}-nic'
     privateLinkServiceConnections: [
       {
-        name: '${name}-privateLinkServiceConnection'
+        name: name
         properties: {
           privateLinkServiceId: postgresqlServer.id
-          groupIds: [
-            'postgresqlServer'
-          ]
+          groupIds: ['postgresqlServer']
         }
       }
     ]
@@ -61,7 +62,7 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   location: 'global'
 }
 
-resource privateDnsZoneVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
+resource privateDnsZoneVNetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
   parent: privateDnsZone
   name: '${privateDnsZoneName}-dblink'
   location: 'global'
@@ -73,9 +74,9 @@ resource privateDnsZoneVnetLink 'Microsoft.Network/privateDnsZones/virtualNetwor
   }
 }
 
-resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-05-01' = {
-  parent: privateEndpoint
+resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-03-01' = {
   name: 'default'
+  parent: privateEndpoint
   properties: {
     privateDnsZoneConfigs: [
       {

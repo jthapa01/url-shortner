@@ -1,7 +1,6 @@
 param location string = resourceGroup().location
 @secure()
 param pgSqlPassword string
-param cosmosDbConnSecretVersion string
 param customDomain string
 
 var uniqueId = uniqueString(resourceGroup().id)
@@ -14,28 +13,27 @@ var cosmosTriggerSubnetName = 'subnet-cosmos-trigger-${uniqueId}'
 var redisSubnetName = 'subnet-redis-${uniqueId}'
 var postgresSubnetName = 'subnet-postgres-${uniqueId}'
 
-
 module vnet 'modules/network/virtual-network.bicep' = {
   name: 'vnetDeployment'
   params: {
-    location: location
     name: vnetName
+    location: location
     subnets: [
       {
         name: apiSubnetName
         addressPrefix: '10.0.1.0/24'
         delegations: [
           {
-            name: 'Microsoft.Web/serverFarms'
+            name: 'Microsoft.Web/serverfarms'
             properties: {
-              serviceName: 'Microsoft.Web/serverFarms'
+              serviceName: 'Microsoft.Web/serverfarms'
             }
           }
         ]
         serviceEndpoints: [
           { service: 'Microsoft.KeyVault' }
           { service: 'Microsoft.AzureCosmosDB' }
-          { service: 'Microsoft.Web'}
+          { service: 'Microsoft.Web' }
         ]
       }
       {
@@ -101,7 +99,7 @@ module vnet 'modules/network/virtual-network.bicep' = {
       }
     ]
   }
-}   
+}
 
 module keyVault 'modules/secrets/keyvault.bicep' = {
   name: 'keyVaultDeployment'
@@ -208,10 +206,10 @@ module tokenRangeService 'modules/compute/appservice.bicep' = {
     vnetId: resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, tokenRangeSubnetName)
     ipSecurityRestrictions: [
       {
-        name: 'AllowApiSubnet'
+        tag: 'Default'
         action: 'Allow'
         priority: 100
-        tag: 'Default'
+        name: 'AllowApiSubnet'
         vnetSubnetResourceId: resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, apiSubnetName)
       }
     ]
@@ -317,7 +315,7 @@ module cosmosTriggerFunction 'modules/compute/function.bicep' = {
     appSettings: [
       {
         name: 'CosmosDbConnection'
-        value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/CosmosDb--ConnectionString/${cosmosDbConnSecretVersion})'
+        value: '@Microsoft.KeyVault(SecretUri=https://${keyVaultName}.vault.azure.net/secrets/CosmosDb--ConnectionString/)'
       }
       {
         name: 'TargetDatabaseName'
@@ -407,8 +405,8 @@ module frontDoor 'modules/network/front-door.bicep' = {
 module frontDoorRoutes 'modules/network/front-door-routes.bicep' = {
   name: 'frontDoorRoutesDeployment'
   params: {
-    profileName: 'front-door-${uniqueId}'
     endpointName: 'endpoint-${uniqueId}'
+    profileName: 'front-door-${uniqueId}'
     uniqueId: uniqueId
     redirectApiHostName: redirectApiService.outputs.hostname
     apiHostName: apiService.outputs.hostname
